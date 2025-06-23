@@ -1,0 +1,41 @@
+Organizing Data
+Scenario
+The database operations team has created a relational database named world containing three tables: 
+city, country, and countrylanguage. 
+Write a few queries to group records for analysis by using both the GROUP BY and OVER clauses.
+
+Challenge:
+Use the GROUP BY clause with the aggregate function SUM()
+Use the OVER clause with the RANK() window function
+Use the OVER clause with the aggregate function SUM() and the RANK() window function
+When you start the lab, the following resources are already created for you:
+image 272 
+image 272.2
+
+Task 1: Connect to the Command Host: connect to an instance containing a database client, which is used to connect to a database. This instance is referred to as the Command Host.
+ choose EC2. choose Instances labelled Command Host and then choose Connect.
+
+1.2.For Connect to instance, choose in the Session Manager tab Connect to open a terminal window.
+To configure the terminal to access all required tools and resources, run the following command:
+
+sudo su
+cd /home/ec2-user/
+
+To connect to the database server, run the following command in the terminal. A password was configured when the database was installed.
+mysql -u root --password='re:St@rt!9'
+
+Task 2: Query the world database
+
+2.1To show the existing databases:
+SHOW DATABASES;
+
+2.2.To review the table schema, data, and number of rows in the country table, enter the following query.
+
+SELECT * FROM world.country;
+
+2.3.To return a list of records where the Region is Australia and New Zealand. 
+
+SELECT Region, Name, Population FROM world.country WHERE Region = 'Australia and New Zealand' ORDER By Population desc;
+2.4.
+SELECT Region, Name, Population, SUM(Population) OVER(partition by Region ORDER BY Population) as 'Running Total' FROM world.country WHERE Region = 'Australia and New Zealand';
+2.5

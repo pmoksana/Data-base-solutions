@@ -1,0 +1,127 @@
+Database Table Operations
+
+ 
+
+Scenario
+Organizate a relational database instance. Creating and dropping (deleting) databases and tables.
+
+ 
+
+Objectives
+
+Use the CREATE statement to create databases and tables
+Use the SHOW statement to view available databases and tables
+Use the ALTER statement to alter the structure of a table
+Use the DROP statement to delete databases and tables
+
+
+Solution
+
+###Task 1: Connect to the Command Host
+
+sudo su
+cd /home/ec2-user/
+
+Recall Linux commands
+ 
+###1.1Connect to the relational database instance. A password was configured when the database was installed.
+
+mysql -u root --password='re:St@rt!9'
+
+
+The MySQL command-line client is an SQL shell that you can use to interact with database engines.
+
+Switch	Description
+-u or --user	The MySQL user name used to connect to a database instance
+-p or --password	The MySQL password used to connect to a database instance
+
+ 
+
+###Task 2: Create a database and a table
+
+2.1.Show the existing databases, to determine the available database and to ensure that you are working with the correct database instance 
+
+SHOW DATABASES;
+
+
+2.2.Create a new database named world
+
+CREATE DATABASE world;
+
+2.3.erify that the world database has been created. 
+
+SHOW DATABASES;
+
+Store data in a database, the database needs to contain one or more tables with well-defined structure, known as a table schema.
+2.4.Create a table named country.  
+
+CREATE TABLE world.country (
+  `Code` CHAR(3) NOT NULL DEFAULT '',
+  `Name` CHAR(52) NOT NULL DEFAULT '',
+  `Conitinent` enum('Asia','Europe','North America','Africa','Oceania','Antarctica','South  America') NOT NULL DEFAULT 'Asia',
+  `Region` CHAR(26) NOT NULL DEFAULT '',
+  `SurfaceArea` FLOAT(10,2) NOT NULL DEFAULT '0.00',
+  `IndepYear` SMALLINT(6) DEFAULT NULL,
+  `Population` INT(11) NOT NULL DEFAULT '0',
+  `LifeExpectancy` FLOAT(3,1) DEFAULT NULL,
+  `GNP` FLOAT(10,2) DEFAULT NULL,
+  `GNPOld` FLOAT(10,2) DEFAULT NULL,
+  `LocalName` CHAR(45) NOT NULL DEFAULT '',
+  `GovernmentForm` CHAR(45) NOT NULL DEFAULT '',
+  `HeadOfState` CHAR(60) DEFAULT NULL,
+  `Capital` INT(11) DEFAULT NULL,
+  `Code2` CHAR(2) NOT NULL DEFAULT '',
+  PRIMARY KEY (`Code`)
+);
+
+2.5.Verify that the country table was created, use the SHOW TABLES; 
+Use the USE command to specify which database to run a query against. Run the following commands in your terminal. 
+
+USE world;
+SHOW TABLES;
+
+2.6.Use the SHOW COLUMNS query to list all the columns on a table. 
+
+SHOW COLUMNS FROM world.country;
+
+Note: Notice that the Continent column is spelled incorrectly as Conitinent. 
+
+2.7.Alter the table's schema by ALTER TABLE command. Fix the incorrectly spelled Continent column, run the following command.
+
+ALTER TABLE world.country RENAME COLUMN Conitinent TO Continent;
+
+2.8. Verify that the Continent column name in the country table has been corrected.
+
+SHOW COLUMNS FROM world.country;
+ 
+
+2.7.Challenge 1
+Create a table named city and add two columns named Name and Region. Both columns should use the CHAR data type.
+Tip: Expand the question to reveal the solution.
+CREATE TABLE world.city (`Name` CHAR(52), `Region` CHAR(26));
+
+Task 3: Delete a database and tables
+
+3.1.To drop the city table.
+
+DROP TABLE world.city;
+ 
+3.2.Write a query to drop the country table.
+Tip: Expand the question to reveal the solution.
+
+ DROP TABLE country;
+
+3.3.Verify that both tables have been dropped.
+SHOW TABLES;
+
+3.4.Drop the world database, run the following command.
+
+DROP DATABASE world;
+
+3.5Verify that the world database has been deleted, run the following query.
+
+SHOW DATABASES;
+ 
+
+
+

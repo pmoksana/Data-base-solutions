@@ -1,0 +1,127 @@
+Selecting Data from a Database
+
+Scenario:
+The database operations team has created a relational database named world containing three tables: city, country, and countrylanguage.
+Based on specific use cases defined in the lab exercise, your write a few queries using database operators and the SELECT statement.
+
+
+
+###Objectives:
+Use some common database operators 
+Use the COUNT() function
+Use the following operators to query a database:
+<
+>
+=
+WHERE
+ORDER BY
+AND
+
+Solution:
+
+
+
+AWS service restrictions
+In this lab environment, access to AWS services and service actions might be restricted to the ones that you need to complete the lab instructions.
+You might encounter errors if you attempt to access other services or perform actions beyond the ones that this lab describes.
+
+ 
+
+Task 1: Connect to the Command Host via AWS Management Console
+
+In this task, you connect to an instance containing a database client, which is used to connect to a database. This instance is referred to as the Command Host.
+
+In the AWS Management Console, choose the  Services menu. Choose Compute, and then choose EC2.
+
+In the left navigation menu, choose Instances.
+
+Next to the instance labelled Command Host, select the check box  and then choose Connect.
+
+Note: If you do not see the Command Host, the lab is possibly still being provisioned, or you may be using another Region.
+
+For Connect to instance, choose the Session Manager tab.
+
+Choose Connect to open a terminal window.
+
+Note: If the Connect button is not available, wait for a few minutes and try again.
+
+To configure the terminal to access all required tools and resources, run the following command:
+
+sudo su
+cd /home/ec2-user/
+
+
+
+Tips:
+
+Copy and paste the command into the Session Manager terminal window.
+If you are using a Windows system, press Shift+Ctrl+v to paste the command.
+To connect to the database server, run the following command in the terminal. A password was configured when the database was installed.
+
+mysql -u root --password='re:St@rt!9'
+ Tip: At any stage of the lab, if the Sessions Manager window is not responsive or if you need to reconnect to the database, then follow these steps:
+
+Close the Sessions Manager window, and try to reconnect using the previous steps.
+Run the following commands in the terminal.
+sudo su
+cd /home/ec2-user/
+mysql -u root --password='re:St@rt!9'
+ 
+
+Task 2: Query the world database
+In this task, you query the world database using various SELECT statements and database operators.
+
+To show the existing databases, enter the following command in the terminal.
+
+SHOW DATABASES;
+Verify that a database named world is available. If the world database is not available, then contact your instructor.
+
+To list all rows and columns in the country table, run the following query.
+
+SELECT * FROM world.country;
+To query the number of rows in a table, you can use the COUNT() function in a SELECT statement. To count all the rows in table, you can use COUNT(*). To count the number of rows that have a value in a specific column, include the column name as a parameter in the COUNT() function: for example, COUNT(Population). To list the number of rows in the country table, run the following query.
+
+SELECT COUNT(*) FROM world.country;
+To list all columns in the country table, run the following query. You run this query to understand the table schema.
+
+SHOW COLUMNS FROM world.country;
+To query specific columns in the world table, run the following query to return a result set that includes the Name, Capital, Region, SurfaceArea, and Population columns.
+
+SELECT Name, Capital, Region, SurfaceArea, Population FROM world.country;
+Database column names are sometimes not user friendly. To add a more descriptive column name to the query output, you can use the AS option. Run the following query that includes this option.
+
+SELECT Name, Capital, Region, SurfaceArea AS "Surface Area", Population FROM world.country;
+If required, scroll to the top of the query results, and observe that the SurfaceArea column is displayed as Surface Area.
+
+Ordered result sets are easier to view and work with. If you would like to order the output based on a column, you can use the ORDER BY option. In this example, you order the output based on the population.
+
+SELECT Name, Capital, Region, SurfaceArea AS "Surface Area", Population FROM world.country ORDER BY Population;
+The ORDER BY option orders data in ascending order.
+
+To order data in descending order, use the DESC option with ORDER BY. Run the following command with this option.  
+
+SELECT Name, Capital, Region, SurfaceArea AS "Surface Area", Population FROM world.country ORDER BY Population DESC;
+You can add conditions to SELECT statements by using the WHERE clause. For example, to list all rows with a population greater than 50,000,000, run the following query.
+
+SELECT Name, Capital, Region, SurfaceArea AS "Surface Area", Population FROM world.country WHERE Population > 50000000 ORDER BY Population DESC;
+You have used the > comparison operator. Similarly, you can use other comparison operators to compare values.
+
+You can construct a WHERE clause by using a number of conditions and operators. 
+
+The following query uses two conditions: all rows with a population greater than 50,000,000 and all rows with a population less than 100,000,000. The query includes the AND operator to indicate that both the conditions must be true. Run the following query in your terminal.
+
+SELECT Name, Capital, Region, SurfaceArea AS "Surface Area", Population FROM world.country WHERE Population > 50000000 AND Population < 100000000 ORDER BY Population DESC;
+For more information about comparison operators, see the Additional resources section at the end of the lab.
+
+ 
+
+Challenge
+Query the country table to return a set of records based on the following question.
+Which country in Southern Europe has a population greater than 50,000,000?
+
+
+MariaDB [(none)]> SELECT Name, Capital, Region, SurfaceArea AS "Surface Area", Population from world.country WHERE Population > 50000000 AND Region = "Southern Europe";
++-------+---------+-----------------+--------------+------------+
+| Name  | Capital | Region          | Surface Area | Population |
++-------+---------+-----------------+--------------+------------+
+| Italy |    1464 | Southern Europe |    301316.00 |   57680000 |

@@ -17,7 +17,7 @@ Use the DROP statement to delete databases and tables
 
 Solution
 
-###Task 1: Connect to the Command Host
+###Task 1: Connect to the Command Host EC2, connect an Instance 
 
 sudo su
 cd /home/ec2-user/
@@ -107,18 +107,19 @@ Task 3: Delete a database and tables
 DROP TABLE world.city;
  
 3.2.Write a query to drop the country table.
-Tip: Expand the question to reveal the solution.
+
 
  DROP TABLE country;
 
 3.3.Verify that both tables have been dropped.
+
 SHOW TABLES;
 
-3.4.Drop the world database, run the following command.
+3.4.Drop the world database.
 
 DROP DATABASE world;
 
-3.5Verify that the world database has been deleted, run the following query.
+3.5.Verify that the world database has been deleted, run the following query.
 
 SHOW DATABASES;
  

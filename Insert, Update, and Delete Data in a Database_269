@@ -1,0 +1,137 @@
+Insert, Update, and Delete Data in a Database_269
+
+Create a relational database called world containing three tables: city, country, and countrylanguage.
+You have to validate the configuration of the database by running INSERT, UPDATE, and DELETE statements on the country table.  
+
+ 
+
+Objectives:
+Insert rows into a table
+Update rows in a table
+Delete rows from a table
+Import rows from a database backup file
+
+Insert, Update, and Delete Data in a Database
+ image 269
+
+ Solution:
+
+
+
+###Task 1: Connect to a database
+
+sudo su
+cd /home/ec2-user/
+
+mysql -u root --password='re:St@rt!9'
+
+
+###1.1.Show the existing databases, currently available databases.
+
+SHOW DATABASES;
+ 
+
+###Task 2: Insert data into a table by insert sample data into the country table.
+
+###2.1.Verify that the country table exists. 
+
+
+SELECT * FROM world.country;
+
+
+###2.2. Insert rows into the country table.
+
+INSERT INTO world.country VALUES ('IRL','Ireland','Europe','British Islands',70273.00,1921,3775100,76.8,75921.00,73132.00,'Ireland/Éire','Republic',1447,'IE');
+
+INSERT INTO world.country VALUES ('AUS','Australia','Oceania','Australia and New Zealand',7741220.00,1901,18886000,79.8,351182.00,392911.00,'Australia','Constitutional Monarchy, Federation',135,'AU');
+
+
+###2.3.Verify that two rows were successfully inserted into the country table, run the following query.
+
+SELECT * FROM world.country WHERE Code IN ('IRL', 'AUS');
+
+
+| Code | Name      | Continent | Region                    | SurfaceArea | IndepYear | Population | LifeExpectancy | GNP       | GNPOld    | LocalName   | GovernmentForm      | Capital | Code2 |
++------+-----------+-----------+---------------------------+-------------+-----------+------------+----------------+-----------+-----------+-------------+-------------------------------------+---------+-------+
+| AUS  | Australia | Oceania   | Australia and New Zealand |  7741220.00 |      1901 |   18886000 |           79.8 | 351182.00 | 392911.00 | Australia   | Constitutional Monarchy, Federation |     135 | AU    |
+| IRL  | Ireland   | Europe    | British Islands           |    70273.00 |      1921 |    3775100 |           76.8 |  75921.00 |  73132.00 | Ireland/ire | Republic      |    1447 | IE    |
++------+-----------+-----------+---------------------------+-------------+-----------+------------+----------------+-----------+-----------+-------------+-------------------------------------+---------+-------+
+
+
+###Task 3: Update rows in a table
+
+###3.1.Set the value in the Population column to 0 for both rows in the country table. 
+
+UPDATE world.country SET Population = 0;
+
+
+###3.2.Verify that the Population column in the country table was updated.
+
+SELECT * FROM world.country;
+
+| Code | Name      | Continent | Region                    | SurfaceArea | IndepYear | Population | LifeExpectancy | GNP       | GNPOld    | LocalName   | GovernmentForm      | Capital | Code2 |
++------+-----------+-----------+---------------------------+-------------+-----------+------------+----------------+-----------+-----------+-------------+-------------------------------------+---------+-------+
+| AUS  | Australia | Oceania   | Australia and New Zealand |  7741220.00 |      1901 |          0 |           79.8 | 351182.00 | 392911.00 | Australia   | Constitutional Monarchy, Federation |     135 | AU    |
+| IRL  | Ireland   | Europe    | British Islands           |    70273.00 |      1921 |          0 |           76.8 |  75921.00 |  73132.00 | Ireland/ire | Republic      |    1447 | IE    |
+
+
+###3.3. Update the Population and SurfaceArea columns for all rows in the country table.
+
+UPDATE world.country SET Population = 100, SurfaceArea = 100;
+
+
+###3.4.Verify that the Population and SurfaceArea columns in the country table were updated.
+
+SELECT * FROM world.country;
+ 
+
+###Task 4.1 Delete rows in the country table. 
+
+
+SET FOREIGN_KEY_CHECKS = 0;
+DELETE FROM world.country;
+
+
+###4.2. Verify that all rows have been deleted from the country table.
+
+
+MariaDB [(none)]> SELECT * FROM world.country;
+Empty set (0.000 sec)
+
+MariaDB [(none)]> QUIT;
+Bye
+
+
+###Task 5 Import data using an SQL file using an SQL file.
+
+### 5.1.Verify that the world.sql file has been downloaded, run the following command.
+
+ls /home/ec2-user/world.sql
+
+
+###5.2.Create a SQL script file containing a group of SQL statements to quickly load data into a database. 
+Load rows into the country table
+
+
+mysql -u root --password='re:St@rt!9' < /home/ec2-user/world.sql
+
+This database file adds two additional tables and inserts data into all three tables.
+
+
+###5.3.Reconnect to the database.
+
+mysql -u root --password='re:St@rt!9'
+
+###5.4.Verify that the script ran successfully.
+
+SHOW TABLES;
+
+Expected result: there are three tables named city, country, and countrylanguage.
+
+Verify that the rows were loaded successfully.
+
+SELECT * FROM country;
+
+ 
+
+ 

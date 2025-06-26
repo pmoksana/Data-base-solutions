@@ -1,0 +1,205 @@
+Build  DB Server and Interact With DB Using an App
+
+
+Goal:
+Leveraging an AWS-managed database instance for solving relational database needs.
+
+
+###Objectives
+
+Launch an Amazon RDS DB instance with high availability.
+Configure the DB instance to permit connections from your web server.
+Open a web application and interact with your database.
+
+
+###Task 1: Create a Security Group for the RDS DB Instance
+In this task, you will create a security group to allow your web server to access your RDS DB instance. The security group will be used when you launch the database instance.
+
+In the AWS Management Console, select the  Services menu, and then select VPC under Networking & Content Delivery.
+
+In the left navigation pane, click Security Groups.
+
+Click Create security group and then configure:
+
+Security group name: DB Security Group
+
+Description: Permit access from Web Security Group
+
+VPC: Lab VPC
+
+You will now add a rule to the security group to permit inbound database requests. The security group currently has no rules. You will add a rule to permit access from the Web Security Group.
+
+In the Inbound rules section, click Add rule, then configure:
+
+Type: MySQL/Aurora (3306)
+
+Source: Type sg in the search field and then select Web Security Group.
+
+This configures the Database security group to permit inbound traffic on port 3306 from any EC2 instance that is associated with the Web Security Group.
+
+Scroll to the bottom of the screen, then click Create security group
+
+You will use this security group when launching the Amazon RDS database.
+
+ 
+
+Task 2: Create a DB Subnet Group
+In this task, you will create a DB subnet group that is used to tell RDS which subnets can be used for the database. Each DB subnet group requires subnets in at least two Availability Zones.
+
+In the AWS Management Console, select the  Services menu, and then select RDS under Database.
+
+In the left navigation pane, click Subnet groups.
+
+ If the navigation pane is not visible, click the  menu icon in the top-left corner.
+
+Click Create DB Subnet Group then configure:
+
+Name: DB Subnet Group
+
+Description: DB Subnet Group
+
+VPC ID: Lab VPC
+
+In the Add subnets section for Availability zones, click the , then:
+
+Select  the first Availability zone
+
+Select  the second Availability zone
+
+For Subnets, click the , then:
+
+For the first Availability zone, select  10.0.1.0/24
+
+For the second Availability zone, select  10.0.3.0/24
+
+Click Create
+
+This adds Private Subnet 1 (10.0.1.0/24) and Private Subnet 2 (10.0.3.0/24). You will use this DB subnet group when creating the database in the next task.
+
+ 
+
+Task 3: Create an Amazon RDS DB Instance
+In this task, you will configure and launch a Multi-AZ Amazon RDS for MySQL database instance.
+
+Amazon RDS Multi-AZ deployments provide enhanced availability and durability for Database (DB) instances, making them a natural fit for production database workloads. When you provision a Multi-AZ DB instance, Amazon RDS automatically creates a primary DB instance and synchronously replicates the data to a standby instance in a different Availability Zone (AZ).
+
+In the left navigation pane, click Databases.
+
+Click Create database
+
+ If you see Switch to the new database creation flow at the top of the screen, please click it.
+
+Choose Create database, then choose Standard create.
+
+Under the Engine options section, for Engine type, choose MySQL.
+
+For Engine version, choose the latest version.
+
+For Templates, choose Dev/Test.
+
+For Availability and durability, choose Multi-AZ DB Instance.
+
+Under Settings, configure the following:
+
+DB instance identifier: lab-db
+
+Master username: main
+
+Master password: lab-password
+
+Confirm password: lab-password
+
+Under Instance configuration, configure the following for DB instance class:
+
+Select  Burstable classes (includes t classes).
+
+Select db.t3.medium. 
+
+Under Storage, configure:
+
+Select General Purpose (SSD) under Storage type.
+
+Under Connectivity, configure:
+
+Virtual Private Cloud (VPC): Lab VPC
+
+Under VPC security group select Choose existing
+
+Under Existing VPC security groups
+
+Use X to Remove default.
+
+Select DB Security Group to highlight it in blue.
+
+Under Monitoring, expand Additional configuration and then configure the following:
+
+For Enhanced Monitoring, uncheck  Enable Enhanced monitoring.
+
+Scroll down to the  Additional configuration section and expand this option. Then configure:
+
+Initial database name: lab
+
+Under Backup, uncheck  Enable automated backups.
+
+ This will turn off backups, which is not normally recommended, but will make the database deploy faster for this lab.
+
+Scroll to the bottom of the screen, then click Create database
+
+Your database will now be launched.
+
+Click lab-db (click the link itself).
+
+You will now need to wait approximately 4 minutes for the database to be available. The deployment process is deploying a database in two different Availability zones.
+
+ Note: If you are prompted with the Suggested add-ons for lab-db window, choose Close
+
+ While you are waiting, you might want to review the Amazon RDS FAQs or grab a cup of coffee.
+
+Wait until the Status changes to Modifying or Available.
+
+Scroll down to the Connectivity & Security section and copy the Endpoint field.
+
+It will look similar to: lab-db.cggq8lhnxvnv.us-west-2.rds.amazonaws.com
+
+Paste the Endpoint value into a text editor. You will use it later in the lab.
+
+ 
+
+Task 4: Interact with Your Database
+In this task, you will open a web application running on your web server and configure it to use the database.
+
+Copy the WebServer IP address by selecting i AWS Details above these instructions you are currently reading.
+
+Open a new web browser tab, paste the WebServer IP address and press Enter.
+
+The web application will be displayed, showing information about the EC2 instance.
+
+At the top of the web application page, click the RDS link.
+
+A picture displaying the web application interface
+
+Figure: A picture displaying the web application interface.
+
+ 
+
+You will now configure the application to connect to your database.
+
+Configure the following settings:
+
+Endpoint: Paste the Endpoint you copied to a text editor earlier
+
+Database: lab
+
+Username: main
+
+Password: lab-password
+
+Click Submit
+
+A message will appear explaining that the application is running a command to copy information to the database. After a few seconds the application will display an Address Book.
+
+The Address Book application is using the RDS database to store information.
+
+Test the web application by adding, editing and removing contacts.
+
+The data is being persisted to the database and is automatically replicating to the second Availability Zone.

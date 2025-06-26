@@ -1,0 +1,116 @@
+Performing a Conditional Search
+
+Scenario
+The database operations team has created a relational database named world containing three tables: city, country, and countrylanguage.
+Will write a few queries to search for records (filter records with a conditional search)in the country table.
+Write a search condition by using the WHERE clause
+Use the BETWEEN operator
+Use the LIKE operator with wildcard characters
+Use the AS operator to create a column alias
+Use functions in a SELECT statement
+Use functions in a WHERE clause
+
+Solution:
+
+###Task 1: Connect to the Command Host, so connect to an Amazon Elastic Compute Cloud (Amazon EC2) instance containing a database client.
+
+sudo su
+cd /home/ec2-user/
+mysql -u root --password='re:St@rt!9'
+
+
+###Task 2: Query the world database 
+Show the existing databases, run the following query. 
+SHOW DATABASES;
+
+
+###Review the table schema, data, and number of rows in the country table, run the following query.
+SELECT * FROM world.country;
+
+
+Reduce the number of records, the result set would be smaller and easier to work with and combine two conditions. 
+You can use the > operator and = operator to query values that are greater than or equal to a certain value. 
+To reduce the number of records in the result set by using a WHERE clause and the AND operator, run the following query.
+
+SELECT Name, Capital, Region, SurfaceArea, Population FROM world.country WHERE Population >= 50000000 AND Population <= 100000000;
+
+
+MariaDB [(none)]> SELECT Name, Capital, Region, SurfaceArea, Population FROM world.country WHERE Population >= 50000000 AND Population <= 100000000;
++---------------------------------------+---------+---------------------------+-------------+------------+
+| Name                                  | Capital | Region                    | SurfaceArea | Population |
++---------------------------------------+---------+---------------------------+-------------+------------+
+| Congo, The Democratic Republic of the |    2298 | Central Africa            |  2344858.00 |   51654000 |
+| Germany                               |    3068 | Western Europe            |   357022.00 |   82164700 |
+| Egypt                                 |     608 | Northern Africa           |  1001449.00 |   68470000 |
+| Ethiopia                              |     756 | Eastern Africa            |  1104300.00 |   62565000 |
+| France                                |    2974 | Western Europe            |   551500.00 |   59225700 |
+| United Kingdom                        |     456 | British Islands           |   242900.00 |   59623400 |
+| Iran                                  |    1380 | Southern and Central Asia |  1648195.00 |   67702000 |
+| Italy                                 |    1464 | Southern Europe           |   301316.00 |   57680000 |
+| Mexico                                |    2515 | Central America           |  1958201.00 |   98881000 |
+| Philippines                           |     766 | Southeast Asia            |   300000.00 |   75967000 |
+| Thailand                              |    3320 | Southeast Asia            |   513115.00 |   61399000 |
+| Turkey                                |    3358 | Middle East               |   774815.00 |   66591000 |
+| Ukraine                               |    3426 | Eastern Europe            |   603700.00 |   50456000 |
+| Vietnam                               |    3770 | Southeast Asia            |   331689.00 |   79832000 |
+
+
+
+
+###Return the same records as the previous result set by using the BETWEEN operator
+MariaDB [(none)]> SELECT Name, Capital, Region, SurfaceArea AS "Surface Area", Population FROM world.country WHERE Population BETWEEN 50000000 AND 100000000;
++---------------------------------------+---------+---------------------------+--------------+------------+
+| Name                                  | Capital | Region                    | Surface Area | Population |
++---------------------------------------+---------+---------------------------+--------------+------------+
+| Congo, The Democratic Republic of the |    2298 | Central Africa            |   2344858.00 |   51654000 |
+| Germany                               |    3068 | Western Europe            |    357022.00 |   82164700 |
+
+
+###Return the total population of all European countries by using the LIKE function and SUM function.
+
+MariaDB [(none)]> SELECT sum(Population) from world.country WHERE Region LIKE "%Europe%";
++-----------------+
+| sum(Population) |
++-----------------+
+|       634947800 |
+
+
+###Return the same information as the previous query with the column alias.
+
+MariaDB [(none)]> SELECT sum(Population) AS "Europe Population Total" from world.country WHERE Region LIKE "%Europe%";
++-------------------------+
+| Europe Population Total |
++-------------------------+
+|               634947800 |
++-------------------------+
+
+
+###Perform a case-sensitive search by using the LOWER function, run the following query.
+
+MariaDB [(none)]> SELECT Name, Capital, Region, SurfaceArea, Population from world.country WHERE LOWER(Region) LIKE "%central%";
++---------------------------------------+---------+---------------------------+-------------+------------+
+| Name                                  | Capital | Region                    | SurfaceArea | Population |
++---------------------------------------+---------+---------------------------+-------------+------------+
+| Afghanistan                           |       1 | Southern and Central Asia |   652090.00 |   22720000 |
+| Angola                                |      56 | Central Africa            |  1246700.00 |   12878000 |
+| Bangladesh                            |     150 | Southern and Central Asia |   143998.00 |  129155000 |
+| Belize                                |     185 | Central America           |    22696.00 |     241000 |
+
+
+
+Challenge
+###Write a query to return the sum of the surface area and sum of the population of North America.
+Query the table first to determine which columns and operators to use.
+
+
+MariaDB [(none)]> SELECT SUM(SurfaceArea) as "N. America Surface Area", SUM(Population) as "N. America Population" FROM world.country WHERE Region = "North America";
++-------------------------+-----------------------+
+| N. America Surface Area | N. America Population |
++-------------------------+-----------------------+
+|             21500515.00 |             309632000 |
++-------------------------+-----------------------+
+1 row in set (0.000 sec)
+
+
+
+ 
